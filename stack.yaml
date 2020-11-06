@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: pulumi-access-token
+type: Opaque
+stringData:
+  accessToken: pul-9d56928b39d65006efa1889ee74da726912eeee0
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: gitlab-secret
+type: Opaque
+stringData:
+  # public key added to gitlab repo as a deploy key
+  sshPrivateKey: |
+    -----BEGIN OPENSSH PRIVATE KEY-----
+    b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+    QyNTUxOQAAACAsDSXB4skH/3Nph3xuFJ8Mm+ZgLjnYNWos9vTMHFGfNgAAAJABcsnwAXLJ
+    8AAAAAtzc2gtZWQyNTUxOQAAACAsDSXB4skH/3Nph3xuFJ8Mm+ZgLjnYNWos9vTMHFGfNg
+    AAAECWZIu6zbxbcd0qOI4YE/8pLOOM8pdDwlEr4nrxcc/0HywNJcHiyQf/c2mHfG4Unwyb
+    5mAuOdg1aiz29MwcUZ82AAAAC25wbS1pbnN0YWxsAQI=
+    -----END OPENSSH PRIVATE KEY-----
+---
+
+
+apiVersion: pulumi.com/v1alpha1
+kind: Stack
+metadata:
+  name: bug-npm-install
+spec:
+  accessTokenSecret: pulumi-access-token
+  gitAuthSecret: gitlab-secret
+  stack: rodcloutier/bug-npm-install
+  projectRepo: git@gitlab-ncsa.ubisoft.org:it/rome/palatine/provisioning-engine/bugs/npm_install.git
+  destroyOnFinalize: true
+  refresh: true
+  commit: master

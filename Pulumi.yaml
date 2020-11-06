@@ -1,0 +1,3 @@
+name: bug-npm-install
+runtime: nodejs
+description: Bug with npm install and operator
